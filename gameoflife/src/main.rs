@@ -1,16 +1,17 @@
 use macroquad::prelude::*;
 use ::rand::{RngExt, rng};
 
-const CELL_SIZE : f32 = 4.0;
+const CELL_SIZE : f32 = 10.0;
+const STEP : i32 = 5;
 const WIDTH : f32 = 800.0;
 const HEIGHT : f32 = 600.0;
 
 fn init_grid() -> Vec<Vec<bool>> {
 	let mut result : Vec<Vec<bool>> = Vec::new();
 
-	for _i in (10..HEIGHT as i32).step_by(10) {
+	for _i in (STEP..HEIGHT as i32).step_by(STEP as usize) {
 		let mut row : Vec<bool> = Vec::new();
-		for _j in (10..WIDTH as i32).step_by(10) {
+		for _j in (STEP..WIDTH as i32).step_by(STEP as usize) {
 			row.push(rng().random_bool(0.4));
 		}
 		result.push(row);
@@ -46,7 +47,7 @@ fn game_of_life( grid : &mut Vec<Vec<bool>> ) {
 	let mut clone_grid = grid.clone();
 
 	for (i, h) in grid.iter().enumerate() {
-		for j in 0..h.len() - 1 {
+		for j in 0..h.len(){
 			let count = count_neighbor_alive(&grid, i as i32, j as i32 );
 			clone_grid[i][j] = match (grid[i][j], count) {
 				(true, 2) | (true, 3)	=> true,
@@ -71,10 +72,10 @@ fn draw_grid(grid : &Vec<Vec<bool>>) {
 			else {
 				draw_rectangle(x as f32, y as f32, CELL_SIZE, CELL_SIZE, BLACK);
 			}
-			x += 10;
+			x += STEP;
 		}
 		x = 0;
-		y += 10;
+		y += STEP;
 	}
 }
 
